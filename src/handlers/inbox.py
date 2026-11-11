@@ -186,7 +186,7 @@ async def cmd_setup(message: Message, bot: Bot) -> None:
             parse_mode="HTML",
         )
         try:
-            await bot.pin_chat_message(chat_id=chat_id, message_id=inbox_post.message_id)
+            await bot.pin_chat_message(chat_id=chat_id, message_id=inbox_post.message_id, disable_notification=True)
         except Exception:
             pass
 
@@ -240,7 +240,7 @@ async def handle_auto_wiki_pin(
                 parse_mode="HTML",
                 disable_web_page_preview=True,
             )
-            await bot.pin_chat_message(chat_id=chat_id, message_id=sent_pin.message_id)
+            await bot.pin_chat_message(chat_id=chat_id, message_id=sent_pin.message_id, disable_notification=True)
             await db.update_topic_pin(chat_id, target_thread_id, sent_pin.message_id)
         else:
             # Edit existing pinned message
@@ -291,7 +291,7 @@ async def handle_auto_wiki_pin(
                         parse_mode="HTML",
                         disable_web_page_preview=True,
                     )
-                    await bot.pin_chat_message(chat_id=chat_id, message_id=sent_pin.message_id)
+                    await bot.pin_chat_message(chat_id=chat_id, message_id=sent_pin.message_id, disable_notification=True)
                     await db.update_topic_pin(chat_id, target_thread_id, sent_pin.message_id)
     except Exception as e:
         logger.warning("Auto-Wiki pin update notice: %s", e)
@@ -300,6 +300,10 @@ async def handle_auto_wiki_pin(
 @inbox_router.message(IsInboxMessageFilter())
 async def process_inbox_messages(message: Message, bot: Bot) -> None:
     """Pipeline for messages in the Inbox topic."""
+    # Ignore bots (including self)
+    if message.from_user and message.from_user.is_bot:
+        return
+
     chat_id = message.chat.id
     inbox_thread_id = message.message_thread_id or 0
 

@@ -104,8 +104,21 @@ async def cmd_search(message: Message) -> None:
 @group_router.message(F.chat.type.in_({"group", "supergroup"}))
 async def handle_topic_mentions_and_replies(message: Message, bot: Bot) -> None:
     """Answer questions when tagged (@bot_username) or replied to in any forum topic."""
-    # Ignore commands
+    # Ignore bots (including self) and commands
+    if message.from_user and message.from_user.is_bot:
+        return
     if message.text and message.text.startswith("/"):
+        return
+
+    # Ignore all Telegram service messages (pins, topic events, member joins, etc.)
+    if (
+        message.pinned_message
+        or message.forum_topic_created
+        or message.forum_topic_edited
+        or message.forum_topic_closed
+        or message.forum_topic_reopened
+        or not (message.text or message.caption)
+    ):
         return
 
     bot_info = await bot.get_me()
