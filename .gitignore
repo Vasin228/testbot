@@ -1,0 +1,47 @@
+# Environment and secrets
+.env
+.env*.local
+!.env.example
+
+# Python runtime and virtualenv
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Local data and databases
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE and OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

@@ -1,0 +1,27 @@
+services:
+  viberouter-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: viberouter-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 512M
+        reservations:
+          memory: 128M
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
